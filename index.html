@@ -1,23 +1,858 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Aqua Net System</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub Basics — Revision Sheet</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --accent: #238636;
+      --accent-light: #2ea043;
+      --blue: #1f6feb;
+      --blue-light: #388bfd;
+      --orange: #e3b341;
+      --red: #da3633;
+      --green: #3fb950;
+      --purple: #8957e5;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --code-bg: #161b22;
+      --tag-bg: #1c2128;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(35,134,54,0.15), transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    header h1 span { color: var(--accent-light); }
+    header p { color: var(--text-muted); font-size: 1.05rem; }
+    .header-badges { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+    .badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .badge.green { border-color: var(--accent); color: var(--green); }
+    .badge.blue  { border-color: var(--blue);   color: var(--blue-light); }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    nav ul { list-style: none; display: flex; gap: 4px; }
+    nav ul li a {
+      display: block;
+      padding: 12px 14px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+    }
+    nav ul li a:hover { color: var(--text); border-color: var(--border); }
+    nav ul li a.active { color: var(--text); border-color: var(--accent-light); }
+
+    /* ── Layout ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 52px;
+      scroll-margin-top: 60px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 36px; height: 36px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    /* ── Info box ── */
+    .info-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .info-box p { color: var(--text); line-height: 1.75; }
+    .info-box p + p { margin-top: 10px; }
+    strong { color: #fff; font-weight: 600; }
+
+    /* ── Concept Cards ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      transition: border-color .2s, transform .15s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--blue-light);
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-num {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    .card p strong { color: var(--text); }
+
+    /* ── Story Box ── */
+    .story-box {
+      background: linear-gradient(135deg, #161b22, #1c2128);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-light);
+      border-radius: 10px;
+      padding: 24px 28px;
+    }
+    .story-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .story-item:last-child { border-bottom: none; }
+    .story-emoji { font-size: 1.3rem; min-width: 28px; text-align: center; margin-top: 1px; }
+    .story-text { font-size: 0.92rem; color: var(--text-muted); }
+    .story-text strong { color: var(--text); }
+    .story-arrow { color: var(--text-dim); margin: 0 6px; }
+
+    /* ── Code blocks ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .code-label {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: monospace;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .code-label::before { content: '●'; color: var(--red); font-size: 0.6rem; }
+    .code-label::after { content: ''; flex: 1; }
+    pre {
+      padding: 18px 20px;
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      color: #e6edf3;
+    }
+    .cmd { color: #79c0ff; }
+    .flag { color: #ff7b72; }
+    .str  { color: #a5d6ff; }
+    .cmt  { color: var(--text-dim); font-style: italic; }
+    .kw   { color: var(--orange); }
+
+    /* ── Config table ── */
+    .config-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .config-table th, .config-table td {
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .config-table th {
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .config-table td:first-child { font-family: monospace; color: var(--blue-light); }
+    .config-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px 18px 64px;
+      position: relative;
+    }
+    .step-num {
+      position: absolute;
+      left: 18px; top: 50%; transform: translateY(-50%);
+      width: 30px; height: 30px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-light);
+    }
+    .step h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .step p  { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── Loop flow ── */
+    .loop-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .loop-step {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--blue-light);
+      white-space: nowrap;
+    }
+    .loop-arrow {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      padding: 0 8px;
+    }
+
+    /* ── Branches grid ── */
+    .cmd-list { display: flex; flex-direction: column; gap: 10px; }
+    .cmd-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .cmd-row code {
+      font-family: monospace;
+      font-size: 0.83rem;
+      color: #79c0ff;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+    .cmd-row p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── Version methods ── */
+    .methods { display: flex; flex-direction: column; gap: 20px; }
+    .method {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .method-header {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .method-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+    .badge-green { background: rgba(46,160,67,0.2); color: var(--green); border: 1px solid rgba(46,160,67,0.4); }
+    .badge-orange{ background: rgba(227,179,65,0.15); color: var(--orange); border: 1px solid rgba(227,179,65,0.3); }
+    .badge-red   { background: rgba(218,54,51,0.15); color: #ff7b72; border: 1px solid rgba(218,54,51,0.3); }
+    .method-header h3 { font-size: 0.95rem; font-weight: 600; }
+    .method-body { padding: 16px 20px; }
+    .method-body p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px; }
+
+    /* ── Quick ref ── */
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 10px;
+    }
+    .ref-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .ref-cmd {
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: #79c0ff;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ref-desc { font-size: 0.84rem; color: var(--text-muted); padding-top: 2px; }
+
+    /* ── Note ── */
+    .note {
+      background: rgba(31,111,235,0.08);
+      border: 1px solid rgba(31,111,235,0.25);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.86rem;
+      color: #a5c9ff;
+      margin: 12px 0;
+    }
+    .note strong { color: var(--blue-light); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+    }
+    footer a { color: var(--blue-light); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .ref-grid  { grid-template-columns: 1fr; }
+      .loop-flow { gap: 6px; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Aqua Net Status</h1>
-    <p>Welcome to the automated aquarium monitor.</p>
-    <ul>
-        <li>Water Temperature: 24°C</li>
-        <li>Sensor Distance to Bottom: 22cm</li>
-        <li>ESP8266 Wi-Fi: Connected</li>
-        <li>Relay Switch (Pump): ON</li>
-    </ul>
 
+<header>
+  <h1>🌱 GitHub Basics <span>Revision Sheet</span></h1>
+  <p>Personal notebook — Git & GitHub concepts, commands, and workflows</p>
+  <div class="header-badges">
+    <span class="badge green">✓ Core Concepts</span>
+    <span class="badge blue">⬡ Commands</span>
+    <span class="badge">⏪ Version Control</span>
+    <span class="badge">🌿 Branching</span>
+  </div>
+</header>
 
+<nav>
+  <ul>
+    <li><a href="#what-is-github">What is GitHub?</a></li>
+    <li><a href="#core-concepts">Core Concepts</a></li>
+    <li><a href="#story">How It Works</a></li>
+    <li><a href="#setup">Setup</a></li>
+    <li><a href="#workflow">Workflow</a></li>
+    <li><a href="#branches">Branches</a></li>
+    <li><a href="#versions">Versions</a></li>
+    <li><a href="#quickref">Quick Ref</a></li>
+  </ul>
+</nav>
 
-<h1>			Version 3	</h1>
+<div class="container">
 
+  <!-- ── What is GitHub ── -->
+  <section id="what-is-github">
+    <div class="section-header">
+      <div class="section-icon">🌐</div>
+      <h2>What is GitHub?</h2>
+    </div>
+    <div class="info-box">
+      <p>GitHub is a website where people <strong>store code</strong>, <strong>work together</strong>, and <strong>keep track of changes</strong>.</p>
+      <p>Think of it like <strong>Google Drive</strong> — but specially designed for coding, with superpowers.</p>
+      <p>GitHub uses a tool called <strong>Git</strong>, which acts like a <strong>time machine for your code</strong>.</p>
+    </div>
+    <div class="note">
+      <strong>Git vs GitHub:</strong> Git = the engine (tracks changes locally). GitHub = the website (stores & shares code online).
+    </div>
+  </section>
+
+  <!-- ── Core Concepts ── -->
+  <section id="core-concepts">
+    <div class="section-header">
+      <div class="section-icon">🧩</div>
+      <h2>Core Concepts</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-title"><span class="card-num">1</span> Repository (Repo)</div>
+        <p>A <strong>folder</strong> on GitHub. Contains your project files, remembers every change ever made, and can be shared with others.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">2</span> Commit</div>
+        <p><strong>Saving your work</strong> with a message. GitHub remembers every commit forever — like <strong>checkpoints in a game</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">3</span> Branch</div>
+        <p>A <strong>safe copy</strong> of your project to experiment on. Main branch = official. Other branches = testing playground.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">4</span> Merge</div>
+        <p>When your experiment works, <strong>merge</strong> the branch back into main. "This change is good — add it to the real project."</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">5</span> Pull Request (PR)</div>
+        <p>A <strong>proposal to merge</strong> your changes. "Hey team, I made changes — can we add them?" Others review, comment, or approve. <strong>Note: it's about merging, not downloading.</strong></p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">6</span> Clone</div>
+        <p><strong>Download a repo</strong> to your computer. You get a full copy of the project.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">7</span> Push</div>
+        <p>After making changes on your computer, <strong>push</strong> them to GitHub. Push = <strong>upload</strong> your changes.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">8</span> Pull</div>
+        <p><strong>Download</strong> the latest changes from GitHub to your computer.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">9</span> Fork</div>
+        <p>Your own <strong>copy of someone else's repo</strong>. Useful to modify, suggest improvements, or keep your own version.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">10</span> Issues</div>
+        <p>Like <strong>to-do tasks</strong> or <strong>bug reports</strong>. Example: "Login button doesn't work", "Add dark mode".</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">11</span> README.md</div>
+        <p>The <strong>homepage</strong> of your repo. Explains what the project does, how to install it, and how to use it. Written in Markdown.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-num">12</span> Git</div>
+        <p>The <strong>engine behind GitHub</strong>. Can be used via Command Line, VS Code, or GitHub Desktop.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Story ── -->
+  <section id="story">
+    <div class="section-header">
+      <div class="section-icon">🧠</div>
+      <h2>How GitHub Works — Simple Story</h2>
+    </div>
+    <div class="story-box">
+      <div class="story-item">
+        <div class="story-emoji">📁</div>
+        <div class="story-text">Create a <strong>repo</strong> <span class="story-arrow">→</span> Your book folder</div>
+      </div>
+      <div class="story-item">
+        <div class="story-emoji">✍️</div>
+        <div class="story-text">Write a chapter <span class="story-arrow">→</span> Make a <strong>commit</strong></div>
+      </div>
+      <div class="story-item">
+        <div class="story-emoji">🌿</div>
+        <div class="story-text">Want to try a new ending <span class="story-arrow">→</span> Create a <strong>branch</strong></div>
+      </div>
+      <div class="story-item">
+        <div class="story-emoji">✅</div>
+        <div class="story-text">Like the new ending <span class="story-arrow">→</span> <strong>Merge</strong> it into main</div>
+      </div>
+      <div class="story-item">
+        <div class="story-emoji">💬</div>
+        <div class="story-text">Want feedback <span class="story-arrow">→</span> Open a <strong>pull request</strong></div>
+      </div>
+      <div class="story-item">
+        <div class="story-emoji">🐛</div>
+        <div class="story-text">Someone finds a typo <span class="story-arrow">→</span> They open an <strong>issue</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Setup ── -->
+  <section id="setup">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <h2>Git Setup &amp; First-Time Config</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Download &amp; Install Git</h4>
+        <p>Visit <a href="https://git-scm.com" style="color:var(--blue-light)">git-scm.com</a> and install Git for your OS.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Open Git Bash</h4>
+        <p>In your project folder → Right-click → <strong>Open Git Bash Here</strong></p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Introduce Yourself to Git</h4>
+        <p>Run these once to configure your identity:</p>
+      </div>
+    </div>
+
+    <div class="code-block" style="margin-top:14px">
+      <div class="code-label">bash — git config</div>
+      <pre><span class="cmd">git config</span> <span class="flag">--global</span> user.name  <span class="str">"YourGitHubUsername"</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> user.email <span class="str">"your-email@example.com"</span></pre>
+    </div>
+
+    <table class="config-table" style="margin: 16px 0 24px;">
+      <thead>
+        <tr><th>Flag</th><th>Scope</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>--local</td><td>Only this project folder</td></tr>
+        <tr><td>--global</td><td>All folders on your account <strong style="color:var(--green)">(recommended)</strong></td></tr>
+        <tr><td>--system</td><td>All users on this PC</td></tr>
+      </tbody>
+    </table>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Initialize Git <span style="font-weight:400; color:var(--text-dim); font-size:0.82rem">— run once per project</span></h4>
+        <p></p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash</div>
+      <pre><span class="cmd">git init</span></pre>
+    </div>
+
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num">5</div>
+        <h4>Add Files to Staging</h4>
+        <p></p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash — git add examples</div>
+      <pre><span class="cmd">git add</span> index.html      <span class="cmt"># specific file</span>
+<span class="cmd">git add</span> .               <span class="cmt"># all files</span>
+<span class="cmd">git add</span> folder-name     <span class="cmt"># all files in a folder</span>
+<span class="cmd">git add</span> <span class="kw">*.html</span>          <span class="cmt"># all .html files</span></pre>
+    </div>
+
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num">6</div>
+        <h4>Commit Your Changes</h4>
+        <p></p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash</div>
+      <pre><span class="cmd">git commit</span> <span class="flag">-m</span> <span class="str">"Your message describing the changes"</span></pre>
+    </div>
+
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num">7</div>
+        <h4>Connect to a GitHub Repo <span style="font-weight:400; color:var(--text-dim); font-size:0.82rem">— run once per project</span></h4>
+        <p>First create the repo on GitHub, then connect locally:</p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash</div>
+      <pre><span class="cmd">git remote add</span> origin https://github.com/YourUsername/your-repo.git
+<span class="cmt"># "origin" = shorthand alias for the full repo URL</span></pre>
+    </div>
+
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num">8</div>
+        <h4>Create &amp; Name the Main Branch</h4>
+        <p></p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash</div>
+      <pre><span class="cmd">git branch</span> <span class="flag">-M</span> main
+<span class="cmt"># -M = move/rename. "main" is the standard name.</span></pre>
+    </div>
+
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num">9</div>
+        <h4>Push for the First Time</h4>
+        <p></p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash</div>
+      <pre><span class="cmd">git push</span> <span class="flag">-u</span> origin main
+<span class="cmt"># -u saves origin + branch. Next time just: git push</span></pre>
+    </div>
+  </section>
+
+  <!-- ── Workflow ── -->
+  <section id="workflow">
+    <div class="section-header">
+      <div class="section-icon">🔄</div>
+      <h2>Daily Workflow Loop</h2>
+    </div>
+    <div class="loop-flow">
+      <div class="loop-step">Make Changes</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">git status</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">git add .</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">git commit</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">git push</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">bash — daily loop</div>
+      <pre><span class="cmd">git status</span>                          <span class="cmt"># see what changed</span>
+<span class="cmd">git add</span> .                            <span class="cmt"># stage everything</span>
+<span class="cmd">git commit</span> <span class="flag">-m</span> <span class="str">"describe the change"</span>   <span class="cmt"># save checkpoint</span>
+<span class="cmd">git push</span>                             <span class="cmt"># upload to GitHub</span></pre>
+    </div>
+
+    <div class="code-block" style="margin-top:10px">
+      <div class="code-label">bash — check commits</div>
+      <pre><span class="cmd">git log</span>             <span class="cmt"># full log</span>
+<span class="cmd">git log</span> <span class="flag">--oneline</span>    <span class="cmt"># compact — shows 7-digit hash IDs</span></pre>
+    </div>
+  </section>
+
+  <!-- ── Branches ── -->
+  <section id="branches">
+    <div class="section-header">
+      <div class="section-icon">🌿</div>
+      <h2>Branching &amp; Merging</h2>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">bash — create &amp; switch to a branch</div>
+      <pre><span class="cmd">git checkout</span> <span class="flag">-b</span> branch-name
+<span class="cmt"># Then: add → commit → push (the daily loop)</span>
+<span class="cmd">git push</span> <span class="flag">-u</span> origin branch-name</pre>
+    </div>
+
+    <div style="margin: 20px 0 12px">
+      <div class="cmd-list">
+        <div class="cmd-row">
+          <code>git branch -a</code>
+          <p>List all branches (local + remote)</p>
+        </div>
+        <div class="cmd-row">
+          <code>git branch -d branch-name</code>
+          <p>Delete a branch <strong>locally</strong></p>
+        </div>
+        <div class="cmd-row">
+          <code>git push origin --delete branch-name</code>
+          <p>Delete a branch from <strong>GitHub too</strong></p>
+        </div>
+        <div class="cmd-row">
+          <code>git checkout main</code>
+          <p>Switch back to the main branch</p>
+        </div>
+        <div class="cmd-row">
+          <code>git merge branch-name</code>
+          <p>Merge a branch into the <strong>current</strong> branch (switch to main first)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">bash — full merge flow</div>
+      <pre><span class="cmd">git checkout</span> main            <span class="cmt"># switch to main first</span>
+<span class="cmd">git merge</span> branch-name        <span class="cmt"># merge branch into main</span></pre>
+    </div>
+
+    <div class="note" style="margin-top:16px">
+      <strong>Changing the Default Branch?</strong><br/>
+      Go to <strong>GitHub → Repo Settings → Default Branch</strong> and change it there.
+      Then update local Git: <code style="color:#79c0ff; background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:3px; font-size:0.85em">git remote set-head origin -a</code>
+      (<code style="color:#ff7b72; background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:3px; font-size:0.85em">-a</code> = auto-detect the new default)
+    </div>
+  </section>
+
+  <!-- ── Versions ── -->
+  <section id="versions">
+    <div class="section-header">
+      <div class="section-icon">⏪</div>
+      <h2>Going Back to Previous Versions</h2>
+    </div>
+    <div class="note" style="margin-bottom:20px">
+      Always run <code style="color:#79c0ff; background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:3px; font-size:0.85em">git log --oneline</code> first to find the <strong>7-digit hash ID</strong> of your target commit.
+    </div>
+
+    <div class="methods">
+      <!-- Method 1 -->
+      <div class="method">
+        <div class="method-header">
+          <span class="method-badge badge-green">✅ RECOMMENDED</span>
+          <h3>Method 1 — Safe Checkout</h3>
+        </div>
+        <div class="method-body">
+          <p>View old code without permanently changing anything, OR copy old code as a new commit — preserves full history.</p>
+          <div class="code-block">
+            <div class="code-label">bash</div>
+            <pre><span class="cmt"># View old version in LOCAL (temporary)</span>
+<span class="cmd">git checkout</span> hash-id
+
+<span class="cmt"># Make old version permanent (copy as new commit)</span>
+<span class="cmd">git checkout</span> hash-id .     <span class="cmt"># copy to local</span>
+<span class="cmd">git commit</span> <span class="flag">-m</span> <span class="str">"Reverted to vX"</span>
+<span class="cmd">git push</span></pre>
+          </div>
+          <p style="margin-top:10px">This keeps V1, V2, V3 intact — just adds a new commit matching the old version.</p>
+        </div>
+      </div>
+
+      <!-- Method 2 -->
+      <div class="method">
+        <div class="method-header">
+          <span class="method-badge badge-orange">⚠️ USE WITH CAUTION</span>
+          <h3>Method 2 — Hard Reset &amp; Force Push</h3>
+        </div>
+        <div class="method-body">
+          <p>Removes everything after the target commit. <strong>Destructive — deletes newer commits permanently.</strong></p>
+          <div class="code-block">
+            <div class="code-label">bash</div>
+            <pre><span class="cmd">git reset</span> <span class="flag">--hard</span> hash-id-of-v1
+<span class="cmd">git push</span> <span class="flag">-f</span>             <span class="cmt"># force push — overwrites GitHub</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Method 3 -->
+      <div class="method">
+        <div class="method-header">
+          <span class="method-badge badge-red">❌ NOT RECOMMENDED</span>
+          <h3>Method 3 — Revert (step-by-step)</h3>
+        </div>
+        <div class="method-body">
+          <p>Reverts one commit at a time. Very confusing and requires extra steps — avoid unless you understand it well.</p>
+          <div class="code-block">
+            <div class="code-label">bash</div>
+            <pre><span class="cmd">git revert</span> hash-of-v3    <span class="cmt"># goes back to V2</span>
+<span class="cmd">git revert</span> hash-of-v2    <span class="cmt"># goes back to V1</span>
+<span class="cmd">git push</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Quick Ref ── -->
+  <section id="quickref">
+    <div class="section-header">
+      <div class="section-icon">📌</div>
+      <h2>Quick Reference Card</h2>
+    </div>
+    <div class="ref-grid">
+      <div class="ref-item"><code class="ref-cmd">git init</code><p class="ref-desc">Initialize Git in a folder</p></div>
+      <div class="ref-item"><code class="ref-cmd">git status</code><p class="ref-desc">Check what files have changed</p></div>
+      <div class="ref-item"><code class="ref-cmd">git add .</code><p class="ref-desc">Stage all changed files</p></div>
+      <div class="ref-item"><code class="ref-cmd">git commit -m "msg"</code><p class="ref-desc">Save a checkpoint with a message</p></div>
+      <div class="ref-item"><code class="ref-cmd">git push</code><p class="ref-desc">Upload changes to GitHub</p></div>
+      <div class="ref-item"><code class="ref-cmd">git pull</code><p class="ref-desc">Download latest changes from GitHub</p></div>
+      <div class="ref-item"><code class="ref-cmd">git log --oneline</code><p class="ref-desc">View compact commit history with hash IDs</p></div>
+      <div class="ref-item"><code class="ref-cmd">git clone &lt;url&gt;</code><p class="ref-desc">Download a full repo to your computer</p></div>
+      <div class="ref-item"><code class="ref-cmd">git checkout -b name</code><p class="ref-desc">Create and switch to a new branch</p></div>
+      <div class="ref-item"><code class="ref-cmd">git checkout main</code><p class="ref-desc">Switch back to the main branch</p></div>
+      <div class="ref-item"><code class="ref-cmd">git merge branch-name</code><p class="ref-desc">Merge a branch into the current branch</p></div>
+      <div class="ref-item"><code class="ref-cmd">git branch -a</code><p class="ref-desc">List all local and remote branches</p></div>
+      <div class="ref-item"><code class="ref-cmd">git remote add origin &lt;url&gt;</code><p class="ref-desc">Connect local project to GitHub repo</p></div>
+      <div class="ref-item"><code class="ref-cmd">git push -u origin main</code><p class="ref-desc">First push — saves origin and branch</p></div>
+      <div class="ref-item"><code class="ref-cmd">git checkout &lt;hash&gt; .</code><p class="ref-desc">Copy an old version to your local project</p></div>
+      <div class="ref-item"><code class="ref-cmd">git reset --hard &lt;hash&gt;</code><p class="ref-desc">Hard reset to an old commit (destructive)</p></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Personal GitHub Basics Notebook &nbsp;·&nbsp;
+  <a href="https://github.com/NazmulHaque01" target="_blank">NazmulHaque01</a> &nbsp;·&nbsp;
+  Built for revision &amp; quick reference
+</footer>
 
 </body>
 </html>
